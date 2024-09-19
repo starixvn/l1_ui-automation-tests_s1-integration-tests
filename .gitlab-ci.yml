@@ -28,7 +28,9 @@ docker-build:
     - docker build --pull -t $CI_REGISTRY_IMAGE:latest .
     - docker push $CI_REGISTRY_IMAGE:latest
   rules:
-    - when: never
+    - if: $CI_COMMIT_BRANCH == "main"
+      when: always
+    - when: manual
 
 include: "**/.gitlab-ci.yml"
 
