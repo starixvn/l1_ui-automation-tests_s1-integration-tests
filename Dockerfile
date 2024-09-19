@@ -10,4 +10,4 @@ COPY package.json .
 COPY .npmrc .
 
 RUN npm install
-RUN npx playwright@1.44 install chromium
+RUN npx playwright install
