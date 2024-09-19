@@ -28,6 +28,7 @@ docker-build:
     - docker build --build-arg gameId=$GAMEID --pull -t $CI_REGISTRY_IMAGE:latest .
     - docker push $CI_REGISTRY_IMAGE:latest
   rules:
+      when: always
     - when: never
     - if: $TRIGGER == "true" && $MODE == "BUILD"
 
