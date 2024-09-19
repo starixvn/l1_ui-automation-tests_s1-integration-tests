@@ -1,0 +1,57 @@
+variables:
+  GIT_CLEAN_FLAGS: none
+
+stages:
+  - build
+  - test
+
+cache:
+  key:
+    files:
+      - package-lock.json
+  paths:
+    - .npm/
+
+before_script:
+  - npm ci --cache .npm
+
+docker-build:
+  image: hub.lumigame.com/base/docker:20.10.7
+  tags:
+    - docker
+  stage: build
+
+  before_script:
+    - export CI_REGISTRY_IMAGE=$DOCKER_REG_LOCAL_URL/pentagon-base/s1-integration-tests
+    - docker login -u $DOCKER_REG_LOCAL_USERNAME -p $DOCKER_REG_LOCAL_PASSWORD $DOCKER_REG_LOCAL_URL
+  script:
+    - docker build --build-arg gameId=$GAMEID --pull -t $CI_REGISTRY_IMAGE:latest .
+    - docker push $CI_REGISTRY_IMAGE:latest
+  rules:
+    - when: never
+
+include: "**/.gitlab-ci.yml"
+
+smoketest:
+  image: hub.lumigame.com/pentagon-base/s1-integration-tests
+  stage: test
+  tags:
+    - auto-test-prod
+  script:
+    - cd tests
+    - npm run test:bo
+
+  retry: 1
+  rules:
+    - if: $TRIGGER == "true" && $MODE == "SMOKE"
+      when: always
+    - when: never
+
+  artifacts:
+    paths:
+      - playwright-report
+      - screenshots
+      - test-results
+    when: always
+    expire_in: 1 day
+
