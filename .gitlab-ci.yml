@@ -40,7 +40,7 @@ smoketest:
     - auto-test-prod
   script:
     - cd tests
-    - npm run test:bo
+    - npm run tests:bo
 
   retry: 1
   rules:
