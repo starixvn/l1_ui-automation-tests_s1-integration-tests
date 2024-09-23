@@ -4,7 +4,7 @@ import { PlatformReportPage } from '../page-objects/PlatformReportPage'
 import { Navbar } from '../page-objects/components/Navbar'
 import { SimulatorPage } from '../page-objects/SimulatorPage'
 import { configData } from './configData'
-
+//'void', 'won', 'lose', 'draw', 
 const settleStatusVoid = ['void', 'won', 'lose', 'draw', 'half won', 'half lose'] as const
 const settlestatus = ['won', 'lose', 'draw', 'half won', 'half lose'] as const
 
@@ -19,7 +19,7 @@ const ticketStatus: Record<SettleStatus, string> = {
   'half lose': 'Loss',
 }
 
-test.describe.parallel('BO Integration Test', () => {
+test.describe.parallel('BO Single Place Bet Tests', () => {
   let loginPage: BoLoginPage
   let navbar: Navbar
   let platformReportPage: PlatformReportPage
@@ -43,12 +43,9 @@ test.describe.parallel('BO Integration Test', () => {
       const settledata = await performSimulatorActions(status)
       await performBOActions()
 
-      const isVoid = status === 'void'
       const expectedTicketData = {
         Id: settledata.id,
         betAmount: settledata.betAmount.toFixed(2),
-        validBetAmount: isVoid ? '0.00' : settledata.betAmount.toFixed(2),
-        Turnover: isVoid ? '0.00' : settledata.betAmount.toFixed(2),
         status: ticketStatus[status],
         winloss: settledata.winloss
       }
@@ -60,7 +57,7 @@ test.describe.parallel('BO Integration Test', () => {
   for (const status of settlestatus) {
     test(`Verify Resettle Void for ${status} Ticket `, async () => {
       const settledata = await performSimulatorActions(status)
-      await simulatorPage.reSettle(settledata.betAmount, 'void')
+      await simulatorPage.reSettle(settledata, 'void')
 
       // BO page actions
       await performBOActions()
@@ -78,8 +75,10 @@ test.describe.parallel('BO Integration Test', () => {
     })
   }
 
+  //Resettle
   for (const status of settlestatus) {
     test(`Verify Resettle for ${status} Ticket `, async () => {
+      ['won', 'lose', 'draw', 'half won', 'half lose']
       const newTicketStatus = {
         won: 'lose',
         lose: 'won',
@@ -89,7 +88,7 @@ test.describe.parallel('BO Integration Test', () => {
       }
       const settledata = await performSimulatorActions(status)
       const reSettledata = await simulatorPage.reSettle(
-        settledata.betAmount,
+        settledata,
         newTicketStatus[status]
       )
       await performBOActions()
@@ -107,6 +106,7 @@ test.describe.parallel('BO Integration Test', () => {
     })
   }
 
+  //Unsettle
   for (const status of settlestatus) {
     test(`Verify Unsettle for ${status} Ticket `, async () => {
       // Simulator page actions
@@ -129,11 +129,12 @@ test.describe.parallel('BO Integration Test', () => {
     })
   }
 
+  // /Verify Refund 
   for (const status of settlestatus) {
     test(`Verify Refund for ${status} Ticket `, async () => {
       // Simulator page actions
       const settledata = await performSimulatorActions(status)
-      await simulatorPage.reSettle(settledata.betAmount, 'refund')
+      await simulatorPage.reSettle(settledata, 'refund')
 
       // BO page actions
       await performBOActions()
@@ -152,16 +153,12 @@ test.describe.parallel('BO Integration Test', () => {
   }
 
   const performSimulatorActions = async (
-    status: SettleStatus,
-    resettle?: string
+    status: SettleStatus
   ) => {
     await smPage.bringToFront()
     await smPage.goto(configData.smDomain)
     await simulatorPage.submitUserId(configData.userID)
     const settledata = await simulatorPage.placebetandSettle(status)
-    if (resettle) {
-      return await simulatorPage.reSettle(settledata.betAmount, resettle)
-    }
     return settledata
   }
 

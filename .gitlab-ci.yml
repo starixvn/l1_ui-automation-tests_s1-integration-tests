@@ -39,11 +39,11 @@ smoketest:
     - auto-test-prod
   script:
     - cd tests
-    - npm run tests:bo
+    - npm run tests:$MODE
 
   retry: 1
   rules:
-    - if: $TRIGGER == "true" && $MODE == "SMOKE"
+    - if: $TRIGGER == "true"
       when: always
     - when: never
 

@@ -4,7 +4,9 @@
   "description": "Automated software testing with Playwright",
   "main": "index.js",
   "scripts": {
-    "tests:bo": "playwright test --config=playwright.config.ts --project=Chromium --workers=2"
+    "tests:bo": "playwright test --config=playwright.config.ts --project=BO_Single --workers=2",
+    "tests:bopl": "playwright test --config=playwright.config.ts --project=BO_Parlay --workers=2"
+
   },
   "author": "",
   "license": "ISC",

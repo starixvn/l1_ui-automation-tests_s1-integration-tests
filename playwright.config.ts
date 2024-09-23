@@ -10,16 +10,28 @@ const config: PlaywrightTestConfig = {
     ignoreHTTPSErrors: true,
     screenshot: 'only-on-failure',
   },
-  reporter: [["list"],["html"]],
+  reporter: [["list"]],
   projects: [
     {
-      name: 'Chromium',
+      name: 'BO_Single',
       use: {
         ...devices["Desktop Chrome"],
       },
-      testMatch: `**/tests/*.smoke.spec.ts`,
+      // testMatch: `**/tests/*.smoke.spec.ts`,
+      testMatch: `**/tests/bo-single-integration.smoke.spec.ts`,
+
+    },
+    {
+      name: 'BO_Parlay',
+      use: {
+        ...devices["Desktop Chrome"],
+      },
+      // testMatch: `**/tests/*.smoke.spec.ts`,
+      testMatch: `**/tests/bo-parlay-integration.smoke.spec.ts`,
+
     },
   ],
+  
 }
 
 export default config
