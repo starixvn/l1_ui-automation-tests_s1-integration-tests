@@ -1,6 +1,5 @@
 import {Locator, Page } from '@playwright/test'
 import { AbstractPage } from './AbstractPage'
-const boDomain = "https://bo.nexentgame.com"
 export class BoLoginPage extends AbstractPage {
   // Define selectors
   // readonly page: Page
@@ -19,9 +18,8 @@ export class BoLoginPage extends AbstractPage {
 
   // Define login page methods
   async login(username: string = 'superadmin', password: string= '1234aaAA') {
-    await this.page.goto(boDomain)
-    await this.usernameInput.type(username)
-    await this.passwordInput.type(password)
+    await this.usernameInput.fill(username)
+    await this.passwordInput.fill(password)
     await this.submitButton.click()
     await this.page.waitForTimeout(1000)
   }

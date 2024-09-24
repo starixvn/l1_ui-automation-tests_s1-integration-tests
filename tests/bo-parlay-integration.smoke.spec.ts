@@ -126,7 +126,7 @@ test.describe.parallel('BO Parlay Place Bet Tests', () => {
       await performBOActions()
       for (const iterator of settledata) {
         const expectedTicketData = {
-          Id: settledata.id,
+          Id: iterator.id,
           betAmount: iterator.betAmount.toFixed(2),
           validBetAmount: '0.00',
           Turnover: '0.00',
@@ -173,6 +173,7 @@ test.describe.parallel('BO Parlay Place Bet Tests', () => {
 
   const performBOActions = async () => {
     await boPage.bringToFront()
+    await boPage.goto(configData.boDomain)
     await loginPage.login()
     await navbar.clickOnMenuItem(configData.mainMenu)
     await platformReportPage.selectOrderTracking()

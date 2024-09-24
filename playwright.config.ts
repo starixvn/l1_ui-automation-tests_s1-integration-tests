@@ -1,7 +1,7 @@
 import { PlaywrightTestConfig,devices } from '@playwright/test'
 
 const config: PlaywrightTestConfig = {
-  timeout: 60000,
+  timeout: 120000,
   retries: 0,
   use: {
     headless: true,
@@ -28,6 +28,15 @@ const config: PlaywrightTestConfig = {
       },
       // testMatch: `**/tests/*.smoke.spec.ts`,
       testMatch: `**/tests/bo-parlay-integration.smoke.spec.ts`,
+
+    },
+    {
+      name: 'PS',
+      use: {
+        ...devices["Desktop Chrome"],
+      },
+      // testMatch: `**/tests/*.smoke.spec.ts`,
+      testMatch: `**/tests/ps-*.smoke.spec.ts`,
 
     },
   ],

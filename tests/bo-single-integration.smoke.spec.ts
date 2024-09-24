@@ -164,6 +164,7 @@ test.describe.parallel('BO Single Place Bet Tests', () => {
 
   const performBOActions = async () => {
     await boPage.bringToFront()
+    await boPage.goto(configData.boDomain)
     await loginPage.login()
     await navbar.clickOnMenuItem(configData.mainMenu)
     await platformReportPage.selectOrderTracking()
