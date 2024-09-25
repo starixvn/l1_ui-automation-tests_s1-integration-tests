@@ -3,9 +3,11 @@ export const configData = {
   password:  "sabasw024",
   userID : "Starix1SW_4uo2mvumqtr3_test",
   smDomain :"https://saba-simulator-site.nexentgame.com/saba-sw",
+  smPlusDomain :"https://saba-simulator-site.nexentgame.com/saba-plus",
   boDomain : "https://bo.nexentgame.com",
   platformCode :"GMO",
   mainMenu: "Platform Report",
   reportName: "Order Tracking",
   psDomain: "https://player-site-s1.nexentgame.com/",
+  playerCode: "4uo2mvumqtr3",
 }

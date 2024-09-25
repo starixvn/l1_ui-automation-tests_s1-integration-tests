@@ -6,8 +6,8 @@
   "scripts": {
     "tests:bo": "playwright test --config=playwright.config.ts --project=BO_Single --workers=2",
     "tests:bopl": "playwright test --config=playwright.config.ts --project=BO_Parlay --workers=2",
-    "tests:ps": "playwright test --config=playwright.config.ts --project=PS --workers=1"
-
+    "tests:ps": "playwright test --config=playwright.config.ts --project=PS --workers=1",
+    "tests:plus": "playwright test --config=playwright.config.ts --project=BO_SabaPlus --workers=2"
   },
   "author": "",
   "license": "ISC",

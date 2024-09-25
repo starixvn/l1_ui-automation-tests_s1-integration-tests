@@ -39,6 +39,15 @@ const config: PlaywrightTestConfig = {
       testMatch: `**/tests/ps-*.smoke.spec.ts`,
 
     },
+    {
+      name: 'BO_SabaPlus',
+      use: {
+        ...devices["Desktop Chrome"],
+      },
+      // testMatch: `**/tests/*.smoke.spec.ts`,
+      testMatch: `**/tests/bo-sabaplus-integration.smoke.spec.ts`,
+
+    },
   ],
   
 }
