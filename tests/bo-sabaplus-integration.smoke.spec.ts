@@ -13,7 +13,6 @@ const ticketStatus: Record<SettleStatus, string> = {
   won: 'Win',
   lose: 'Loss',
   draw: 'Draw',
-
 }
 
 test.describe.parallel('Saba Plus Smoke Test', () => {
@@ -36,37 +35,40 @@ test.describe.parallel('Saba Plus Smoke Test', () => {
   })
 
   test(`Verify Open Ticket After User Placing a Bet`, async () => {
+    const GameType = 'MaxGame'
     await smPage.bringToFront()
     await smPage.goto(configData.smPlusDomain)
     await simulatorPage.submitUserId(configData.playerCode)
-    const {  TicketNo, Stake }=  (await simulatorPage.clickPlacebet()).Payload.BetDataSet[0]
+    const { TicketNo, Stake } = (await simulatorPage.clickPlacebet()).Payload
+      .BetDataSet[0]
     await simulatorPage.clickSubmit()
     await performBOActions()
 
     const expectedTicketData = {
       Id: TicketNo,
       betAmount: Stake.toFixed(2),
-      status: "Open",
-      winloss: "0.00"
+      status: 'Open',
+      winloss: '0.00',
     }
 
     await platformReportPage.verifyTicketDetail(expectedTicketData)
 
     //EndGame above bet
-    await simulatorPage.endGame("won")
+    await simulatorPage.endGame('won', GameType)
   })
-  
 
   for (const status of settlestatus) {
     test(`Verify Place bet then End Game with ${status}`, async () => {
-      const settledata = await performSimulatorActions(status)
+      const GameType = 'JiLi'
+
+      const settledata = await performSimulatorActions(status, GameType)
       await performBOActions()
 
       const expectedTicketData = {
         Id: settledata.id,
         betAmount: settledata.Stake.toFixed(2),
         status: ticketStatus[status],
-        winloss: settledata.winloss
+        winloss: settledata.winloss,
       }
 
       await platformReportPage.verifyTicketDetail(expectedTicketData)
@@ -75,36 +77,41 @@ test.describe.parallel('Saba Plus Smoke Test', () => {
 
   for (const status of settlestatus) {
     test(`Verify Place Free Spin then End Game with ${status}`, async () => {
-      const settledata = await performSimulatorActions(status,"freespin")
+      const GameType = 'SabaPlay'
+
+      const settledata = await performSimulatorActions(
+        status,
+        GameType,
+        'freespin'
+      )
       await performBOActions()
-      console.log(status,settledata.Stake);
-      
+      console.log(status, settledata.Stake)
+
       const expectedTicketData = {
         Id: settledata.id,
-        betAmount: "0.00",
+        betAmount: '0.00',
         status: ticketStatus[status],
-        winloss: settledata.winloss
+        winloss: settledata.winloss,
       }
 
       await platformReportPage.verifyTicketDetail(expectedTicketData)
     })
   }
 
-
   const performSimulatorActions = async (
-    status: SettleStatus, action: string =""
+    status: SettleStatus,
+    GameType: string,
+    action: string = ''
   ) => {
     await smPage.bringToFront()
     await smPage.goto(configData.smPlusDomain)
     await simulatorPage.submitUserId(configData.playerCode)
-    
-    if (action == "freespin") {
-      return await simulatorPage.placebetFreeSpin(status)
-    }
-    else{
-      return await simulatorPage.placebetSettle(status)
-    }
 
+    if (action == 'freespin') {
+      return await simulatorPage.placebetFreeSpin(status, GameType)
+    } else {
+      return await simulatorPage.placebetSettle(status, GameType)
+    }
   }
 
   const performBOActions = async () => {

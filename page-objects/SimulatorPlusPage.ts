@@ -79,15 +79,15 @@ export class SimulatorPlusPage extends AbstractPage {
     return data ? JSON.parse(data) : ''
   }
 
-  async endGame(status: string, odds: number = 0.95) {
-    return await this.settleBet(status, odds, this.clickEndGame.bind(this));
+  async endGame(status: string, GameType:string,odds: number = 0.95) {
+    return await this.settleBet(status,GameType, odds, this.clickEndGame.bind(this));
   }
 
-  async placebetSettle(status: string, odds: number = 0.95) {
-    return await this.settleBet(status, odds, this.clickPlacebetSettle.bind(this));
+  async placebetSettle(status: string, GameType:string, odds: number = 0.95) {
+    return await this.settleBet(status, GameType,odds, this.clickPlacebetSettle.bind(this));
   }
 
-  async placebetFreeSpin(status: string, odds: number = 0.95) {
+  async placebetFreeSpin(status: string, GameType:string, odds: number = 0.95) {
     await this.clickPlaceFreeSpin()
     await this.clickSubmit()
     await this.clickEndGame()
@@ -109,13 +109,14 @@ export class SimulatorPlusPage extends AbstractPage {
     }
     const winloss= status === "won" ? ((hardcodestake * odds)+hardcodestake).toFixed(2):
     status === "lose" ? -(hardcodestake) : "0.00"; 
+    settdata.Payload.GameType = GameType
     await this.page.locator(simulatorLocator.txtRequest).fill(JSON.stringify(settdata));
     await this.clickSubmit();
 
     return { id: txn.TicketNo , Stake: hardcodestake, odds, status, winloss:winloss};
   }
 
-  async settleBet(status: string, odds: number, clickMethod: () => Promise<void>) {
+  async settleBet(status: string, GameType:string, odds: number, clickMethod: () => Promise<void>) {
     await clickMethod();
     const settdata = await this.getRequestField();
     const txn = settdata.Payload.BetDataSet[0];
@@ -135,7 +136,7 @@ export class SimulatorPlusPage extends AbstractPage {
       }
       const winloss= status === "won" ? (txn.ActualStake * odds).toFixed(2) :
       status === "lose" ? (-parseFloat(txn.ActualStake)).toFixed(2) : "0.00";
-   
+      settdata.Payload.GameType = GameType
     await this.page.locator(simulatorLocator.txtRequest).fill(JSON.stringify(settdata));
     await this.clickSubmit();
     // Return result
