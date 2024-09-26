@@ -30,11 +30,12 @@ test.describe.parallel('BO Single Place Bet Tests', () => {
      
       for (const gamePD of lstGameProviders) {
         await homePage.selectProvider(gamePD)
-        const elements = await page.locator('//img[contains(@src,"common/no-image.svg")]/following::div[1]').elementHandles();
-        
+        const elements = await page.locator('//img[contains(@src,"common/no-image.svg")]/parent::div/parent::div/following::div[1]/div[1]').elementHandles();
+
         for (const element of elements) {
-          const txt = await element.evaluate(el => el.innerText);
-          lstGamesError.push(`Type: ${gametype} -  Provider: ${gamePD} - GameName: ${txt}`)
+          const idValue = await element.evaluate(el => el.getAttribute('id') || 'No ID');
+          const txt = await element.evaluate(el => el.innerText.trim());
+          lstGamesError.push(`Type: ${gametype} -  Provider: ${gamePD} - GameName: ${txt} - ID:${idValue} `)
         }
         await homePage.selectProvider(gamePD)
       }

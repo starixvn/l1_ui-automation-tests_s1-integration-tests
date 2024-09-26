@@ -30,10 +30,11 @@ export class PSHomePage extends AbstractPage {
     await this.page.waitForTimeout(2000)
   }
 
-  async selectProvider(providerName: string) {   
+  async selectProvider(providerName: string, timeout: number = 2000) {   
     await this.page.locator(`//span[contains(text(),"${providerName}")]`).focus()
     await this.page.locator(`//span[contains(text(),"${providerName}")]`).click()
-    await this.page.waitForTimeout(2000)
+    await this.page.waitForLoadState("domcontentloaded")
+    await this.page.waitForTimeout(timeout)
   }
 
 
